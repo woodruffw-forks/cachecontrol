@@ -2,26 +2,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import base64
 import io
-import json
-import zlib
 
 import msgpack
 from requests.structures import CaseInsensitiveDict
 
-from .compat import HTTPResponse, pickle, text_type
-
-
-def _b64_decode_bytes(b):
-    return base64.b64decode(b.encode("ascii"))
-
-
-def _b64_decode_str(s):
-    return _b64_decode_bytes(s).decode("utf8")
-
-
-_default_body_read = object()
+from .compat import HTTPResponse, text_type
 
 
 class Serializer(object):
