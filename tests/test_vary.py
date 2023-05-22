@@ -13,7 +13,6 @@ from pprint import pprint
 
 
 class TestVary(object):
-
     @pytest.fixture()
     def sess(self, url):
         self.url = urljoin(url, "/vary_accept")
@@ -33,7 +32,6 @@ class TestVary(object):
             cached.status == resp.raw.status,
             cached.version == resp.raw.version,
             cached.reason == resp.raw.reason,
-            cached.strict == resp.raw.strict,
             cached.decode_content == resp.raw.decode_content,
         ]
 
