@@ -146,33 +146,12 @@ class Serializer(object):
         return
 
     def _loads_v1(self, request, data, body_file=None):
-        try:
-            cached = pickle.loads(data)
-        except ValueError:
-            return
-
-        return self.prepare_response(request, cached, body_file)
+        # Pickle-based caching; treat this as a miss.
+        return
 
     def _loads_v2(self, request, data, body_file=None):
-        assert body_file is None
-        try:
-            cached = json.loads(zlib.decompress(data).decode("utf8"))
-        except (ValueError, zlib.error):
-            return
-
-        # We need to decode the items that we've base64 encoded
-        cached["response"]["body"] = _b64_decode_bytes(cached["response"]["body"])
-        cached["response"]["headers"] = dict(
-            (_b64_decode_str(k), _b64_decode_str(v))
-            for k, v in cached["response"]["headers"].items()
-        )
-        cached["response"]["reason"] = _b64_decode_str(cached["response"]["reason"])
-        cached["vary"] = dict(
-            (_b64_decode_str(k), _b64_decode_str(v) if v is not None else v)
-            for k, v in cached["vary"].items()
-        )
-
-        return self.prepare_response(request, cached, body_file)
+        # Zlip-compressed base64 caching; treat this as a miss.
+        return
 
     def _loads_v3(self, request, data, body_file):
         # Due to Python 2 encoding issues, it's impossible to know for sure
